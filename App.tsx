@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Phone, 
   Mail, 
@@ -13,7 +13,6 @@ import {
   Terminal,
   ExternalLink
 } from 'lucide-react';
-import html2pdf from 'html2pdf.js';
 import GlassCard from './components/GlassCard';
 import SectionTitle from './components/SectionTitle';
 import TechBadge from './components/TechBadge';
@@ -21,8 +20,6 @@ import { CONTACT_INFO, EXPERIENCE, PROJECTS, SUMMARY, TECH_STACK, EDUCATION } fr
 
 const App: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [isGenerating, setIsGenerating] = useState(false);
-  const contentRef = useRef<HTMLDivElement>(null);
 
   // Simple ambient background movement effect
   useEffect(() => {
@@ -37,31 +34,8 @@ const App: React.FC = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const downloadPDF = () => {
-    if (!contentRef.current) return;
-    
-    setIsGenerating(true);
-    
-    // Brief delay to allow UI to update (hide button)
-    setTimeout(() => {
-      const element = contentRef.current;
-      const opt = {
-        margin: [10, 10],
-        filename: `CV_Martin_Kase.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-          scale: 2, 
-          useCORS: true, 
-          backgroundColor: '#0f172a',
-          logging: false
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(element).save().then(() => {
-        setIsGenerating(false);
-      });
-    }, 100);
+  const handlePrint = () => {
+    window.print();
   };
 
   // Helper to format the long summary text with headers
@@ -99,7 +73,7 @@ const App: React.FC = () => {
         />
       </div>
 
-      <div ref={contentRef} className="relative z-10 max-w-5xl mx-auto px-4 py-12 md:py-20 flex flex-col gap-8">
+      <div className="relative z-10 max-w-5xl mx-auto px-4 py-12 md:py-20 flex flex-col gap-8">
         
         {/* Hero Section */}
         <GlassCard className="p-8 md:p-10">
@@ -286,24 +260,22 @@ const App: React.FC = () => {
             </GlassCard>
 
             {/* Download/Action */}
-            {!isGenerating && (
-              <button 
-                onClick={downloadPDF}
-                className="w-full text-left block"
-              >
-                <GlassCard className="p-6 text-center group cursor-pointer hover:bg-cyan-500/10 transition-colors" hoverEffect>
-                  <div className="flex flex-col items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
-                      <Download size={24} />
-                    </div>
-                    <div>
-                      <h3 className="text-white font-medium">Download PDF</h3>
-                      <p className="text-slate-400 text-xs mt-1">Get a printable version</p>
-                    </div>
+            <button 
+              onClick={handlePrint}
+              className="w-full text-left block no-print"
+            >
+              <GlassCard className="p-6 text-center group cursor-pointer hover:bg-cyan-500/10 transition-colors" hoverEffect>
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400 group-hover:scale-110 transition-transform">
+                    <Download size={24} />
                   </div>
-                </GlassCard>
-              </button>
-            )}
+                  <div>
+                    <h3 className="text-white font-medium">Download PDF</h3>
+                    <p className="text-slate-400 text-xs mt-1">Get a printable version</p>
+                  </div>
+                </div>
+              </GlassCard>
+            </button>
 
           </div>
         </div>
