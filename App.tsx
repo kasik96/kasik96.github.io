@@ -34,10 +34,6 @@ const App: React.FC = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   // Helper to format the long summary text with headers
   const renderSummary = (text: string) => {
     return text.split('\n\n').map((block, index) => {
@@ -260,9 +256,10 @@ const App: React.FC = () => {
             </GlassCard>
 
             {/* Download/Action */}
-            <button 
-              onClick={handlePrint}
-              className="w-full text-left block no-print"
+            <a 
+              href="/Martin Kase - Senior Software Engineer.pdf" 
+              download="Martin Kase - Senior Software Engineer.pdf"
+              className="w-full text-left block"
             >
               <GlassCard className="p-6 text-center group cursor-pointer hover:bg-cyan-500/10 transition-colors" hoverEffect>
                 <div className="flex flex-col items-center gap-3">
@@ -271,11 +268,11 @@ const App: React.FC = () => {
                   </div>
                   <div>
                     <h3 className="text-white font-medium">Download PDF</h3>
-                    <p className="text-slate-400 text-xs mt-1">Get a printable version</p>
+                    <p className="text-slate-400 text-xs mt-1">Get the official resume</p>
                   </div>
                 </div>
               </GlassCard>
-            </button>
+            </a>
 
           </div>
         </div>
