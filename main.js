@@ -1,9 +1,10 @@
 /*
  * Progressive enhancement only. Every word of content is in index.html; this file
  * adds the live clock, the online badge, the theme toggle and copy-to-clipboard.
- * With JavaScript off the page still renders in full — you just get the static
- * availability line instead of a ticking clock, and the email pill stays a
- * plain mailto: link.
+ * With JavaScript off the page still renders in full — the meta bar simply shows
+ * the location and offset without a clock, the online badge stays hidden, and the
+ * email pill stays a plain mailto: link. The footer carries the availability line
+ * either way.
  */
 (function () {
 	"use strict";
@@ -19,8 +20,7 @@
 
 	/* --- clock and availability ------------------------------------------- */
 
-	var weekdayEl = $("[data-weekday]");
-	var dateEl = $("[data-date]");
+	var datestampEl = $("[data-datestamp]");
 	var timeEl = $("[data-time]");
 	var zoneEl = $("[data-zone]");
 	var statusEl = $("[data-status]");
@@ -55,20 +55,15 @@
 	function tick() {
 		var now = new Date();
 
-		if (weekdayEl) {
-			weekdayEl.textContent = now
-				.toLocaleDateString("en-GB", { timeZone: ZONE, weekday: "long" })
-				.toUpperCase();
-		}
-		if (dateEl) {
-			dateEl.textContent = now
-				.toLocaleDateString("en-GB", {
-					timeZone: ZONE,
-					day: "numeric",
-					month: "long",
-					year: "numeric",
-				})
-				.toUpperCase();
+		if (datestampEl) {
+			var weekday = now.toLocaleDateString("en-GB", { timeZone: ZONE, weekday: "long" });
+			var date = now.toLocaleDateString("en-GB", {
+				timeZone: ZONE,
+				day: "numeric",
+				month: "long",
+				year: "numeric",
+			});
+			datestampEl.textContent = (weekday + " · " + date).toUpperCase();
 		}
 		if (timeEl) {
 			timeEl.textContent = now.toLocaleTimeString("en-GB", {
@@ -79,14 +74,13 @@
 				hourCycle: "h23",
 			});
 		}
-		if (zoneEl) zoneEl.textContent = CITY + " | " + gmtOffset(now);
+		if (zoneEl) zoneEl.textContent = CITY + " " + gmtOffset(now);
 
 		if (statusEl) {
 			var hour = localHour(now);
 			var online = hour >= ONLINE_FROM && hour < ONLINE_TO;
 			statusEl.hidden = false;
-			statusEl.classList.toggle("green", online);
-			statusEl.classList.toggle("red", !online);
+			statusEl.classList.toggle("offline", !online);
 			if (statusTextEl) statusTextEl.textContent = online ? "online" : "offline";
 			if (tooltipEl) {
 				tooltipEl.textContent = online ? "Hit me up!" : "I'll get back to you tomorrow.";

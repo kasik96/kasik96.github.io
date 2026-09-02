@@ -6,8 +6,8 @@
     <title>Martin Kaše</title>
     <meta name="description" content="Martin Kaše — senior mobile and front-end engineer. Shipping mobile and web products end to end since 2013." />
     <meta name="author" content="Martin Kaše" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fdfbf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#12100e" media="(prefers-color-scheme: dark)" />
 
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Martin Kaše" />
@@ -25,7 +25,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/styles.css" />
@@ -48,41 +48,38 @@
   </head>
 
   <body>
-    <button type="button" class="theme-toggle" data-theme-toggle hidden aria-label="Switch colour theme">
-      <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></svg>
-      <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
-    </button>
+    <!-- META BAR — full-bleed strip; the clock inside it is filled in by main.js. -->
+    <div class="meta">
+      <div class="meta-inner">
+        <span data-datestamp></span>
+        <div class="meta-right">
+          <span class="meta-time" data-time></span>
+          <span data-zone>ÚSTÍ NAD LABEM GMT+2</span>
+          <button type="button" class="toggle" data-theme-toggle hidden aria-label="Switch colour theme">
+            <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" /></svg>
+            <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
+          </button>
+        </div>
+      </div>
+    </div>
 
     <main class="page">
-      <!-- HEADER — static availability without JS, a live clock with it. -->
-      <header class="clock">
-        <div class="clock-col">
-          <span class="static muted">AVAILABLE</span>
-          <span class="static">EVERY DAY, 08:00 — 16:00</span>
-          <span class="live muted" data-weekday></span>
-          <span class="live" data-date></span>
-        </div>
-        <div class="clock-col clock-col-end">
-          <span class="live muted" data-time></span>
-          <span class="static">ÚSTÍ NAD LABEM | GMT+2</span>
-          <span class="live" data-zone></span>
-        </div>
-      </header>
-
-      <!-- PROFILE -->
-      <section class="profile">
-        <div class="identity">
+      <!-- IDENTITY -->
+      <section class="identity">
+        <div class="identity-row">
           <div class="avatar-wrap">
             <img class="avatar" src="/assets/avatar.jpeg" width="64" height="64" alt="Martin Kaše" />
-            <span class="status badge" data-status hidden>
-              <span class="status-dot"><span class="status-ping"></span><span class="status-core"></span></span>
-              <span data-status-text>online</span>
-            </span>
             <span class="tooltip" data-status-tooltip>Hit me up!</span>
           </div>
           <div class="identity-text">
-            <h1>Martin Kaše</h1>
-            <p class="eyebrow">SENIOR MOBILE AND FRONT-END ENGINEER</p>
+            <div class="name-row">
+              <h1>Martin Kaše</h1>
+              <span class="status" data-status hidden>
+                <span class="status-dot"><span class="status-ping"></span><span class="status-core"></span></span>
+                <span data-status-text>online</span>
+              </span>
+            </div>
+            <p class="role-line">senior mobile &amp; front-end engineer</p>
           </div>
         </div>
 
@@ -99,169 +96,215 @@
             <span data-copy-label>mail@kasemartin.cz</span>
           </a>
           <a class="pill" href="https://github.com/kasik96" target="_blank" rel="noreferrer noopener">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
+            <svg class="icon icon-github" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.4 5.4 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" /><path d="M9 18c-4.51 2-5-2-7-2" /></svg>
             github.com/kasik96
           </a>
           <a class="pill" href="https://www.linkedin.com/in/kasemartin96" target="_blank" rel="noreferrer noopener">
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
+            <svg class="icon icon-linkedin" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" /><rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" /></svg>
             in/kasemartin96
           </a>
         </div>
 
-        <ul class="skills">
-          <li class="badge blue">React</li>
-          <li class="badge blue">React Native</li>
-          <li class="badge blue">TypeScript</li>
-          <li class="badge blue">JavaScript</li>
-          <li class="badge blue">HTML</li>
-          <li class="badge blue">CSS</li>
-          <li class="badge green">CapacitorJS</li>
-          <li class="badge green">Ionic</li>
-          <li class="badge green">Cordova</li>
-          <li class="badge green">Swift</li>
-          <li class="badge green">iOS</li>
-          <li class="badge green">Android</li>
-          <li class="badge purple">Angular</li>
-          <li class="badge purple">Ember</li>
-          <li class="badge purple">Node.js</li>
-          <li class="badge purple">Vite</li>
-          <li class="badge orange">PHP (Nette)</li>
-          <li class="badge orange">MySQL</li>
-          <li class="badge orange">C#</li>
-          <li class="badge orange">XNA</li>
-          <li class="badge red">Agentic AI</li>
-          <li class="badge red">Home Assistant</li>
-          <li class="badge red">ESP8266</li>
-          <li class="badge red">IoT</li>
+        <ul class="chips">
+          <li class="chip">React</li>
+          <li class="chip">React Native</li>
+          <li class="chip">TypeScript</li>
+          <li class="chip">JavaScript</li>
+          <li class="chip">HTML</li>
+          <li class="chip">CSS</li>
+          <li class="chip">CapacitorJS</li>
+          <li class="chip">Ionic</li>
+          <li class="chip">Cordova</li>
+          <li class="chip">Swift</li>
+          <li class="chip">iOS</li>
+          <li class="chip">Android</li>
+          <li class="chip">Angular</li>
+          <li class="chip">Ember</li>
+          <li class="chip">Node.js</li>
+          <li class="chip">Vite</li>
+          <li class="chip">PHP (Nette)</li>
+          <li class="chip">MySQL</li>
+          <li class="chip">C#</li>
+          <li class="chip">XNA</li>
+          <li class="chip">Agentic AI</li>
+          <li class="chip">Home Assistant</li>
+          <li class="chip">ESP8266</li>
+          <li class="chip">IoT</li>
         </ul>
       </section>
 
-      <!-- WORK -->
       <section class="list">
         <h2 class="label">WORK</h2>
-
+        <div class="rows">
         <a class="row" href="https://finviz.com" target="_blank" rel="noreferrer noopener">
-          <span class="row-head"><span class="years">2026—present</span><svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span>
-          <span class="company">Finviz</span>
-          <span class="role">Senior mobile engineer</span>
-          <span class="blurb">Financial market visualisation, screening and research</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Senior mobile engineer</span>
+            <span class="row-meta">2026—present</span>
+          </span>
+          <span class="row-context">Finviz</span>
+          <span class="row-blurb">Financial market visualisation, screening and research</span>
           <span class="detail"><span><span>Building the Finviz mobile app from the ground up in React Native — architecture, navigation, real-time market data and the release pipeline for both stores.</span></span></span>
         </a>
 
         <a class="row" href="https://www.aukro.cz" target="_blank" rel="noreferrer noopener">
-          <span class="row-head"><span class="years">2023—present</span><svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span>
-          <span class="company">Aukro</span>
-          <span class="role">Senior software engineer</span>
-          <span class="blurb">The largest online marketplace in Czechia</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Senior software engineer</span>
+            <span class="row-meta">2023—present</span>
+          </span>
+          <span class="row-context">Aukro</span>
+          <span class="row-blurb">The largest online marketplace in Czechia</span>
           <span class="detail"><span><span>Led the move off a legacy web wrapper onto a full CapacitorJS build with custom UI, native plugins, push notifications and an over-the-air package update system. App Store rating went from 2.2 to 4.4 stars.</span></span></span>
         </a>
 
         <a class="row" href="https://www.scio.cz" target="_blank" rel="noreferrer noopener">
-          <span class="row-head"><span class="years">2021—2025</span><svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span>
-          <span class="company">SCIO</span>
-          <span class="role">Software engineer, app developer</span>
-          <span class="blurb">National education and student testing company</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Software engineer, app developer</span>
+            <span class="row-meta">2021—2025</span>
+          </span>
+          <span class="row-context">SCIO</span>
+          <span class="row-blurb">National education and student testing company</span>
           <span class="detail"><span><span>Built the official SCIO app from scratch in React Native for both platforms, then owned it end to end. Grew to more than 50,000 users.</span></span></span>
         </a>
 
         <a class="row" href="https://www.pricefx.com" target="_blank" rel="noreferrer noopener">
-          <span class="row-head"><span class="years">2018—2022</span><svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span>
-          <span class="company">Pricefx</span>
-          <span class="role">Senior software engineer</span>
-          <span class="blurb">Enterprise price optimisation and management platform</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Senior software engineer</span>
+            <span class="row-meta">2018—2022</span>
+          </span>
+          <span class="row-context">Pricefx</span>
+          <span class="row-blurb">Enterprise price optimisation and management platform</span>
           <span class="detail"><span><span>Built front ends for complex enterprise pricing systems in React and Ember, working across a distributed team. Joined as a software engineer in 2018 and moved up to senior in 2021.</span></span></span>
         </a>
 
         <a class="row" href="https://www.adler.cz" target="_blank" rel="noreferrer noopener">
-          <span class="row-head"><span class="years">2016—2018</span><svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span>
-          <span class="company">ADLER Czech</span>
-          <span class="role">Front-end developer</span>
-          <span class="blurb">Promotional textile e-commerce</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Front-end developer</span>
+            <span class="row-meta">2016—2018</span>
+          </span>
+          <span class="row-context">ADLER Czech</span>
+          <span class="row-blurb">Promotional textile e-commerce</span>
           <span class="detail"><span><span>Developed the Adler e-shop front end in React and Angular, from catalogue and search through to checkout.</span></span></span>
         </a>
 
         <div class="row">
-          <span class="row-head"><span class="years">2012—2016</span></span>
-          <span class="company">Microsoft CZ</span>
-          <span class="role">Microsoft Partner</span>
-          <span class="blurb">Windows Phone evangelism and app development</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Microsoft Partner</span>
+            <span class="row-meta">2012—2016</span>
+          </span>
+          <span class="row-context">Microsoft CZ</span>
+          <span class="row-blurb">Windows Phone evangelism and app development</span>
           <span class="detail"><span><span>Evangelised Windows Phone and spoke on XNA and mobile development. Built Windows Phone apps of my own along the way — Databáze Knih, Bazoš (Neoficiální) and JRm — Dopravní podnik.</span></span></span>
+        </div>
         </div>
       </section>
 
-      <!-- FREELANCE AND EARLY WORK -->
       <section class="list">
         <h2 class="label">FREELANCE AND EARLY WORK</h2>
-
+        <div class="rows">
         <div class="row">
-          <span class="row-head"><span class="years">2016</span></span>
-          <span class="company">PIXBUF</span>
-          <span class="role">Web software developer</span>
-          <span class="blurb">Web applications in PHP and JavaScript</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Web software developer</span>
+            <span class="row-meta">2016</span>
+          </span>
+          <span class="row-context">PIXBUF</span>
+          <span class="row-blurb">Web applications in PHP and JavaScript</span>
           <span class="detail"><span><span>Built web applications on Nette and MySQL with HTML5 and CSS3 front ends, plus Android automation work.</span></span></span>
         </div>
 
         <div class="row">
-          <span class="row-head"><span class="years">2015—2016</span></span>
-          <span class="company">City Taxi Brno</span>
-          <span class="role">Mobile software developer</span>
-          <span class="blurb">Taxi booking apps for iOS and Android</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Mobile software developer</span>
+            <span class="row-meta">2015—2016</span>
+          </span>
+          <span class="row-context">City Taxi Brno</span>
+          <span class="row-blurb">Taxi booking apps for iOS and Android</span>
           <span class="detail"><span><span>Built the iOS and Android apps in PhoneGap on a JavaScript and MySQL stack.</span></span></span>
         </div>
 
         <div class="row">
-          <span class="row-head"><span class="years">2014—2015</span></span>
-          <span class="company">BubbleMania Czech</span>
-          <span class="role">Mobile software developer</span>
-          <span class="blurb">Mobile apps for iOS and Android</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Mobile software developer</span>
+            <span class="row-meta">2014—2015</span>
+          </span>
+          <span class="row-context">BubbleMania Czech</span>
+          <span class="row-blurb">Mobile apps for iOS and Android</span>
           <span class="detail"><span><span>Built both the front end and the back end of the iOS and Android apps in PhoneGap, backed by Azure SQL.</span></span></span>
+        </div>
         </div>
       </section>
 
-      <!-- PROJECTS -->
       <section class="list">
         <h2 class="label">SELECTED PROJECTS</h2>
-
+        <div class="rows">
         <a class="row" href="https://github.com/kasik96/Swift-VS-Code" target="_blank" rel="noreferrer noopener">
-          <span class="row-head"><span class="company">Visual Studio Code<span class="tag">105 ★</span></span><svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span>
-          <span class="role">Swift for VS Code</span>
-          <span class="blurb">The first Swift language support extension for VS Code</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Swift for VS Code</span>
+            <span class="row-meta">105 ★</span>
+          </span>
+          <span class="row-context">Visual Studio Code</span>
+          <span class="row-blurb">The first Swift language support extension for VS Code</span>
           <span class="detail"><span><span>Written before Apple or the VS Code team shipped anything official. Syntax highlighting, snippets and build tasks for Swift, and still the reference implementation people fork from.</span></span></span>
         </a>
 
         <a class="row" href="https://marketplace.visualstudio.com/items?itemName=Kasik96.latte" target="_blank" rel="noreferrer noopener">
-          <span class="row-head"><span class="company">Visual Studio Code<span class="tag">57k installs</span></span><svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span>
-          <span class="role">Nette Latte + Neon</span>
-          <span class="blurb">Language support for the Latte templating engine and Neon config</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Nette Latte + Neon</span>
+            <span class="row-meta">57k installs</span>
+          </span>
+          <span class="row-context">Visual Studio Code</span>
+          <span class="row-blurb">Language support for the Latte templating engine and Neon config</span>
           <span class="detail"><span><span>Highlighting, snippets and formatting for Nette's Latte and Neon file formats. Passed 57,000 installs on the Marketplace.</span></span></span>
         </a>
 
         <a class="row" href="https://github.com/kasik96/opengcontrol" target="_blank" rel="noreferrer noopener">
-          <span class="row-head"><span class="company">macOS</span><svg class="icon arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10" /><path d="M7 17 17 7" /></svg></span>
-          <span class="role">opengcontrol</span>
-          <span class="blurb">Open-source CLI alternative to Logitech G software on macOS</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">opengcontrol</span>
+            <span class="row-meta">macOS</span>
+          </span>
+          <span class="row-context">CLI</span>
+          <span class="row-blurb">Open-source CLI alternative to Logitech G software on macOS</span>
           <span class="detail"><span><span>Control Logitech G device lighting and settings from the terminal, without running the vendor's heavyweight desktop app.</span></span></span>
         </a>
+        </div>
       </section>
 
-      <!-- EDUCATION -->
       <section class="list">
         <h2 class="label">EDUCATION</h2>
-
+        <div class="rows">
         <div class="row">
-          <span class="row-head"><span class="years">2012—2016</span></span>
-          <span class="role">Střední průmyslová škola Ústí nad Labem</span>
-          <span class="blurb">Information technology</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Střední průmyslová škola Ústí nad Labem</span>
+            <span class="row-meta">2012—2016</span>
+          </span>
+          <span class="row-blurb">Information technology</span>
         </div>
 
         <div class="row">
-          <span class="role">Languages</span>
-          <span class="blurb">Czech (native), English (fluent)</span>
+          <span class="bar"></span>
+          <span class="row-head">
+            <span class="row-title">Languages</span>
+          </span>
+          <span class="row-blurb">Czech (native), English (fluent)</span>
+        </div>
         </div>
       </section>
 
       <footer class="footer">
-        <p><span data-year>2026</span> © Martin Kaše — All rights reserved</p>
+        <p>available every day, 08:00 — 16:00</p>
+        <p><span data-year>2026</span> © Martin Kaše</p>
       </footer>
     </main>
 
