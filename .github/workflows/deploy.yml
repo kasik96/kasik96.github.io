@@ -10,19 +10,20 @@ permissions:
 
 jobs:
   build-and-deploy:
-    concurrency: ci-${{ github.ref }} # Recommended if you intend to push frequently
+    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
-      - name: Install and Build 🔧
-        run: |
-          npm install
-          npm run build
+      # No bundler and no dependencies — "build" just assembles dist/ from the
+      # static files. The résumé PDF is generated locally with `npm run pdf`
+      # and committed, so CI needs no browser.
+      - name: Build 🔧
+        run: npm run build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist # The folder the action should deploy.
-          branch: gh-pages # The branch the action should deploy to.
+          folder: dist
+          branch: gh-pages
