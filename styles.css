@@ -1,70 +1,47 @@
 /* ---------------------------------------------------------------------------
-   Tokens. One set of names; the palette swaps under the media query (no JS) and
-   under an explicit .light / .dark class (the toggle, which only ever overrides).
+   "Ink & clay". One set of token names; the palette swaps under the media query
+   (no JS needed) and again under an explicit .light / .dark class set by the
+   toggle, which only ever overrides the system preference.
    --------------------------------------------------------------------------- */
 :root {
 	color-scheme: light;
-	--bg: #ffffff;
-	--bg-muted: #fafafa;
-	--fg: #18181b;
-	--fg-muted: #52525b;
-	--fg-subtle: #a1a1aa;
-	--line: #e4e4e7;
-
-	--blue-bg: #eff6ff;
-	--blue-fg: #2563eb;
-	--green-bg: #f0fdf4;
-	--green-fg: #16a34a;
-	--purple-bg: #faf5ff;
-	--purple-fg: #9333ea;
-	--orange-bg: #fff7ed;
-	--orange-fg: #ea580c;
-	--red-bg: #fef2f2;
-	--red-fg: #dc2626;
+	--bg: #fdfbf7;
+	--surf: #ffffff;
+	--ink: #14110f;
+	--mut: #5c564f;
+	--sub: #958f85;
+	--line: #e6e0d6;
+	--acc: #c2410c;
 }
 
 @media (prefers-color-scheme: dark) {
 	:root:not(.light) {
 		color-scheme: dark;
-		--bg: #09090b;
-		--bg-muted: #18181b;
-		--fg: #fafafa;
-		--fg-muted: #a1a1aa;
-		--fg-subtle: #71717a;
-		--line: #27272a;
-
-		--blue-bg: #172554;
-		--blue-fg: #60a5fa;
-		--green-bg: #052e16;
-		--green-fg: #4ade80;
-		--purple-bg: #3b0764;
-		--purple-fg: #c084fc;
-		--orange-bg: #431407;
-		--orange-fg: #fb923c;
-		--red-bg: #450a0a;
-		--red-fg: #f87171;
+		--bg: #12100e;
+		--surf: #1a1815;
+		--ink: #f7f4ef;
+		--mut: #a8a29a;
+		--sub: #77716a;
+		--line: #2a2622;
+		--acc: #ea8a5f;
 	}
 }
 
 :root.dark {
 	color-scheme: dark;
-	--bg: #09090b;
-	--bg-muted: #18181b;
-	--fg: #fafafa;
-	--fg-muted: #a1a1aa;
-	--fg-subtle: #71717a;
-	--line: #27272a;
+	--bg: #12100e;
+	--surf: #1a1815;
+	--ink: #f7f4ef;
+	--mut: #a8a29a;
+	--sub: #77716a;
+	--line: #2a2622;
+	--acc: #ea8a5f;
+}
 
-	--blue-bg: #172554;
-	--blue-fg: #60a5fa;
-	--green-bg: #052e16;
-	--green-fg: #4ade80;
-	--purple-bg: #3b0764;
-	--purple-fg: #c084fc;
-	--orange-bg: #431407;
-	--orange-fg: #fb923c;
-	--red-bg: #450a0a;
-	--red-fg: #f87171;
+/* Status colours hold in both themes. */
+:root {
+	--online: #4a8259;
+	--offline: #b45a3c;
 }
 
 /* --------------------------------------------------------------------------- */
@@ -84,8 +61,8 @@ body {
 
 body {
 	background-color: var(--bg);
-	color: var(--fg);
-	font-family: "Google Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	color: var(--ink);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Helvetica Neue", sans-serif;
 	font-size: 16px;
 	line-height: 1.5;
 	-webkit-font-smoothing: antialiased;
@@ -106,425 +83,87 @@ ul {
 	list-style: none;
 }
 
-/* Several components below set `display`, which would otherwise beat the UA rule
-   for [hidden] and leak enhancement-only chrome onto the no-JS page. */
-[hidden] {
-	display: none !important;
-}
-
 a {
 	color: inherit;
 	text-decoration: none;
 }
 
 :focus-visible {
-	outline: 2px solid var(--fg-subtle);
+	outline: 2px solid var(--acc);
 	outline-offset: 2px;
 	border-radius: 6px;
 }
 
+/* Several components below set `display`, which would otherwise beat the UA rule
+   for [hidden] and leak enhancement-only chrome onto the no-JS page. */
+[hidden] {
+	display: none !important;
+}
+
+.mono {
+	font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
 .icon {
-	width: 16px;
-	height: 16px;
+	width: 15px;
+	height: 15px;
 	flex-shrink: 0;
 	fill: none;
 	stroke: currentColor;
-	stroke-width: 2;
+	stroke-width: 1.7;
 	stroke-linecap: round;
 	stroke-linejoin: round;
 }
 
-.muted {
-	color: var(--fg-muted);
+/* --- meta bar -------------------------------------------------------------- */
+
+.meta {
+	background-color: var(--surf);
+	border-bottom: 1px solid var(--line);
 }
 
-/* Enhancement-only content: present in the markup, revealed once JS runs. */
-.no-js .live {
-	display: none;
-}
-
-html:not(.no-js) .static {
-	display: none;
-}
-
-/* --- layout ---------------------------------------------------------------- */
-
-.page {
-	max-width: 768px;
-	margin: 0 auto;
-	padding: 48px 24px;
-	display: flex;
-	flex-direction: column;
-	gap: 48px;
-}
-
-/* --- header clock ---------------------------------------------------------- */
-
-.clock {
+.meta-inner {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	font-size: 12px;
-	font-weight: 500;
-	letter-spacing: 1px;
-	color: var(--fg-subtle);
+	max-width: 680px;
+	margin: 0 auto;
+	padding: 14px 40px;
+	font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 11.5px;
+	color: var(--sub);
 }
 
-.clock-col {
+.meta-right {
 	display: flex;
-	flex-direction: column;
+	align-items: center;
+	gap: 14px;
 }
 
-.clock-col-end {
-	text-align: right;
-}
-
-[data-time] {
+.meta-time {
+	color: var(--ink);
 	font-variant-numeric: tabular-nums;
 }
 
-/* --- profile --------------------------------------------------------------- */
-
-.profile {
-	display: flex;
-	flex-direction: column;
-	gap: 24px;
-}
-
-.identity {
-	display: flex;
-	align-items: center;
-	gap: 16px;
-}
-
-.avatar-wrap {
-	position: relative;
-	display: inline-flex;
-	flex-shrink: 0;
-}
-
-.avatar {
-	width: 64px;
-	height: 64px;
-	border-radius: 9999px;
-	object-fit: cover;
-	background-color: var(--bg-muted);
-}
-
-.identity-text {
-	display: flex;
-	flex-direction: column;
-	min-width: 0;
-}
-
-.identity-text h1 {
-	font-weight: 500;
-	color: var(--fg);
-}
-
-.eyebrow {
-	font-size: 12px;
-	font-weight: 500;
-	letter-spacing: 0.5px;
-	color: var(--fg-subtle);
-}
-
-.intro {
-	color: var(--fg-muted);
-	text-wrap: pretty;
-}
-
-/* --- status pill ----------------------------------------------------------- */
-
-.status {
-	position: absolute;
-	bottom: 0;
-	left: 50%;
-	transform: translateX(-50%);
-	box-shadow: 0 0 0 2px var(--bg);
-}
-
-.status-dot {
-	position: relative;
-	display: inline-flex;
-	width: 4px;
-	height: 4px;
-	flex-shrink: 0;
-}
-
-.status-ping,
-.status-core {
-	border-radius: 9999px;
-	background-color: currentColor;
-}
-
-.status-ping {
-	position: absolute;
-	inset: 0;
-	animation: pulse-ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
-.status-core {
-	position: relative;
-	width: 100%;
-	height: 100%;
-}
-
-@keyframes pulse-ping {
-	0% {
-		transform: scale(1);
-		opacity: 0.7;
-	}
-	75%,
-	100% {
-		transform: scale(2.5);
-		opacity: 0;
-	}
-}
-
-.tooltip {
-	position: absolute;
-	bottom: calc(100% + 4px);
-	left: 50%;
-	transform: translateX(-50%);
-	z-index: 20;
-	padding: 4px 8px;
-	border-radius: 6px;
-	background-color: var(--fg);
-	color: var(--bg);
-	font-size: 12px;
-	font-weight: 500;
-	white-space: nowrap;
-	opacity: 0;
-	pointer-events: none;
-	transition: opacity 0.2s ease;
-}
-
-.avatar-wrap:hover .tooltip {
-	opacity: 1;
-}
-
-/* --- pills and badges ------------------------------------------------------ */
-
-.pills {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	gap: 12px;
-}
-
-.pill {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	padding: 8px 16px;
-	border: 1px solid var(--line);
-	border-radius: 9999px;
-	font-size: 14px;
-	color: var(--fg);
-	transition: background-color 0.3s ease;
-}
-
-.pill:hover {
-	background-color: var(--bg-muted);
-}
-
-/* The check only replaces the envelope once the copy actually succeeded. */
-.pill .icon-check,
-.pill.copied .icon-mail {
-	display: none;
-}
-
-.pill.copied .icon-check {
-	display: block;
-}
-
-.skills {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 8px;
-	padding-top: 8px;
-}
-
-.badge {
-	display: inline-flex;
-	align-items: center;
-	gap: 4px;
-	padding: 2px 12px;
-	border-radius: 9999px;
-	font-size: 12px;
-	font-weight: 500;
-	white-space: nowrap;
-	background-color: var(--bg-muted);
-	color: var(--fg-muted);
-}
-
-.badge.blue {
-	background-color: var(--blue-bg);
-	color: var(--blue-fg);
-}
-.badge.green {
-	background-color: var(--green-bg);
-	color: var(--green-fg);
-}
-.badge.purple {
-	background-color: var(--purple-bg);
-	color: var(--purple-fg);
-}
-.badge.orange {
-	background-color: var(--orange-bg);
-	color: var(--orange-fg);
-}
-.badge.red {
-	background-color: var(--red-bg);
-	color: var(--red-fg);
-}
-
-/* --- lists ----------------------------------------------------------------- */
-
-.list {
-	display: flex;
-	flex-direction: column;
-}
-
-.label {
-	padding: 0 4px;
-	font-size: 12px;
-	font-weight: 500;
-	letter-spacing: 1px;
-	color: var(--fg-subtle);
-}
-
-.row {
-	display: flex;
-	flex-direction: column;
-	margin: 0 -16px;
-	padding: 16px 20px;
-	border-radius: 8px;
-	transition: background-color 0.7s ease;
-}
-
-.row:hover {
-	background-color: var(--bg-muted);
-}
-
-.row-head {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 16px;
-}
-
-.years {
-	font-size: 12px;
-	color: var(--fg-subtle);
-}
-
-.company {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	color: var(--fg-muted);
-}
-
-.tag {
-	padding: 2px 8px;
-	border-radius: 9999px;
-	background-color: var(--bg-muted);
-	font-size: 10px;
-	font-weight: 500;
-	color: var(--fg-subtle);
-	white-space: nowrap;
-}
-
-.row:hover .tag {
-	background-color: var(--line);
-}
-
-.role {
-	font-weight: 500;
-	color: var(--fg);
-}
-
-.blurb {
-	color: var(--fg-subtle);
-	text-wrap: pretty;
-}
-
-.arrow {
-	color: var(--fg-subtle);
-	transition: color 0.3s ease;
-}
-
-.row:hover .arrow {
-	color: var(--fg);
-}
-
-/* The detail expands on hover by animating a grid track from 0fr to 1fr — the
-   only way to transition to a height the content decides for itself. */
-.detail {
-	display: grid;
-	grid-template-rows: 0fr;
-	transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.detail > span {
-	min-height: 0;
-	overflow: hidden;
-}
-
-.detail > span > span {
-	display: block;
-	padding-top: 8px;
-	font-size: 14px;
-	color: var(--fg-muted);
-	opacity: 0;
-	transition: opacity 0.7s ease;
-	text-wrap: pretty;
-}
-
-.row:hover .detail {
-	grid-template-rows: 1fr;
-}
-
-.row:hover .detail > span > span {
-	opacity: 1;
-}
-
-/* Touch devices have no hover state, so nothing would ever open. Show it all. */
-@media (hover: none) {
-	.detail {
-		grid-template-rows: 1fr;
-	}
-	.detail > span > span {
-		opacity: 1;
-	}
-}
-
-/* --- theme toggle ---------------------------------------------------------- */
-
-.theme-toggle {
-	position: fixed;
-	right: 16px;
-	bottom: 16px;
-	z-index: 50;
+.toggle {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 32px;
-	height: 32px;
+	width: 30px;
+	height: 30px;
 	padding: 0;
-	border: 0;
-	border-radius: 6px;
-	background-color: var(--bg-muted);
-	color: var(--fg-muted);
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	background-color: transparent;
+	color: var(--sub);
 	cursor: pointer;
-	transition: color 0.3s ease;
+	transition: color 0.25s ease, border-color 0.25s ease;
 }
 
-.theme-toggle:hover {
-	color: var(--fg);
+.toggle:hover {
+	color: var(--ink);
+	border-color: var(--sub);
 }
 
 /* Show whichever icon matches the theme currently in effect. */
@@ -557,10 +196,330 @@ html:not(.no-js) .static {
 	display: none;
 }
 
-@media (min-width: 768px) {
-	.theme-toggle {
-		top: 16px;
-		bottom: auto;
+/* --- layout ---------------------------------------------------------------- */
+
+.page {
+	display: flex;
+	flex-direction: column;
+	gap: 44px;
+	max-width: 680px;
+	margin: 0 auto;
+	padding: 44px 40px 40px;
+}
+
+/* --- identity -------------------------------------------------------------- */
+
+.identity {
+	display: flex;
+	flex-direction: column;
+	gap: 22px;
+}
+
+.identity-row {
+	display: flex;
+	align-items: center;
+	gap: 18px;
+}
+
+.avatar-wrap {
+	position: relative;
+	display: inline-flex;
+	flex-shrink: 0;
+}
+
+.avatar {
+	width: 64px;
+	height: 64px;
+	border-radius: 14px;
+	object-fit: cover;
+	background-color: var(--surf);
+}
+
+.tooltip {
+	position: absolute;
+	bottom: calc(100% + 6px);
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 5;
+	padding: 4px 9px;
+	border-radius: 7px;
+	background-color: var(--ink);
+	color: var(--bg);
+	font-size: 11.5px;
+	white-space: nowrap;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.2s ease;
+}
+
+.avatar-wrap:hover .tooltip {
+	opacity: 1;
+}
+
+.identity-text {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 0;
+}
+
+.name-row {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.identity-text h1 {
+	font-size: 30px;
+	font-weight: 600;
+	letter-spacing: -0.025em;
+	color: var(--ink);
+}
+
+.role-line {
+	font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 11.5px;
+	letter-spacing: 0.02em;
+	color: var(--acc);
+}
+
+.intro {
+	max-width: 58ch;
+	font-size: 17px;
+	line-height: 1.65;
+	color: var(--mut);
+	text-wrap: pretty;
+}
+
+/* --- status pill ----------------------------------------------------------- */
+
+.status {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 3px 9px;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background-color: var(--bg);
+	font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 10.5px;
+	color: var(--online);
+}
+
+.status.offline {
+	color: var(--offline);
+}
+
+.status-dot {
+	position: relative;
+	display: inline-flex;
+	width: 4px;
+	height: 4px;
+	flex-shrink: 0;
+}
+
+.status-ping,
+.status-core {
+	border-radius: 999px;
+	background-color: currentColor;
+}
+
+.status-ping {
+	position: absolute;
+	inset: 0;
+	animation: ping 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.status-core {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+@keyframes ping {
+	0% {
+		transform: scale(1);
+		opacity: 0.65;
+	}
+	75%,
+	100% {
+		transform: scale(2.6);
+		opacity: 0;
+	}
+}
+
+/* --- pills and chips ------------------------------------------------------- */
+
+.pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.pill {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 8px 14px;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 12.5px;
+	letter-spacing: -0.2px;
+	color: var(--ink);
+	transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.pill:hover {
+	background-color: var(--acc);
+	border-color: var(--acc);
+	color: #fff;
+}
+
+/* The check only replaces the envelope once the copy actually succeeded. */
+.pill .icon-check,
+.pill.copied .icon-mail {
+	display: none;
+}
+
+.pill.copied .icon-check {
+	display: block;
+}
+
+.chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+}
+
+.chip {
+	padding: 3px 10px;
+	border: 1px solid var(--line);
+	border-radius: 6px;
+	background-color: var(--surf);
+	font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 11.5px;
+	color: var(--mut);
+}
+
+/* --- ruled lists ----------------------------------------------------------- */
+
+.label {
+	margin-bottom: 6px;
+	font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 11px;
+	letter-spacing: 0.08em;
+	color: var(--acc);
+}
+
+.rows {
+	border-top: 1px solid var(--line);
+}
+
+.row {
+	display: block;
+	position: relative;
+	margin: 0 -18px;
+	padding: 16px 18px;
+	border-bottom: 1px solid var(--line);
+	transition: background-color 0.35s ease, padding-left 0.35s ease;
+}
+
+.row:hover {
+	background-color: var(--surf);
+	padding-left: 24px;
+}
+
+/* The clay rule that slides in along the left edge on hover. */
+.bar {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 2px;
+	background-color: var(--acc);
+	opacity: 0;
+	transition: opacity 0.35s ease;
+}
+
+.row:hover .bar {
+	opacity: 1;
+}
+
+.row-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 14px;
+}
+
+.row-title {
+	font-size: 16.5px;
+	font-weight: 600;
+	color: var(--ink);
+}
+
+.row-meta {
+	font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 11.5px;
+	color: var(--sub);
+	white-space: nowrap;
+}
+
+.row-context {
+	display: block;
+	padding-top: 2px;
+	font-size: 14px;
+	color: var(--acc);
+}
+
+.row-blurb {
+	display: block;
+	padding-top: 3px;
+	font-size: 14px;
+	color: var(--sub);
+	text-wrap: pretty;
+}
+
+/* The detail expands on hover by animating a grid track from 0fr to 1fr — the
+   only way to transition to a height the content decides for itself. */
+.detail {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.detail > span {
+	min-height: 0;
+	overflow: hidden;
+}
+
+.detail > span > span {
+	display: block;
+	padding-top: 10px;
+	font-size: 14.5px;
+	line-height: 1.6;
+	color: var(--mut);
+	opacity: 0;
+	transition: opacity 0.5s ease;
+	text-wrap: pretty;
+}
+
+.row:hover .detail {
+	grid-template-rows: 1fr;
+}
+
+.row:hover .detail > span > span {
+	opacity: 1;
+}
+
+/* Touch devices have no hover state, so nothing would ever open. Show it all. */
+@media (hover: none) {
+	.detail {
+		grid-template-rows: 1fr;
+	}
+	.detail > span > span {
+		opacity: 1;
 	}
 }
 
@@ -568,9 +527,60 @@ html:not(.no-js) .static {
 
 .footer {
 	display: flex;
-	justify-content: flex-end;
-	font-size: 12px;
-	color: var(--fg-subtle);
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+	font-size: 11px;
+	color: var(--sub);
+}
+
+/* --- narrow screens -------------------------------------------------------- */
+
+@media (max-width: 560px) {
+	.meta-inner {
+		padding: 12px 20px;
+		font-size: 10.5px;
+		gap: 10px;
+	}
+
+	.meta-right {
+		gap: 10px;
+	}
+
+	.page {
+		padding: 32px 20px 32px;
+		gap: 36px;
+	}
+
+	.identity-text h1 {
+		font-size: 25px;
+	}
+
+	.intro {
+		font-size: 16px;
+	}
+
+	.row {
+		margin: 0 -12px;
+		padding: 14px 12px;
+	}
+
+	.row:hover {
+		padding-left: 16px;
+	}
+
+	.row-head {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2px;
+	}
+
+	.footer {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 6px;
+	}
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -583,7 +593,7 @@ html:not(.no-js) .static {
 	}
 }
 
-/* --- print / PDF export ----------------------------------------------------
+/* --- print / PDF -----------------------------------------------------------
    The résumé PDF is this page printed. Force the light palette, drop the
    interactive chrome, and open every detail since nothing can be hovered.
    --------------------------------------------------------------------------- */
@@ -599,58 +609,58 @@ html:not(.no-js) .static {
 	:root:not(.light) {
 		color-scheme: light;
 		--bg: #ffffff;
-		--bg-muted: #fafafa;
-		--fg: #18181b;
-		--fg-muted: #3f3f46;
-		--fg-subtle: #71717a;
-		--line: #d4d4d8;
-
-		--blue-bg: #eff6ff;
-		--blue-fg: #1d4ed8;
-		--green-bg: #f0fdf4;
-		--green-fg: #15803d;
-		--purple-bg: #faf5ff;
-		--purple-fg: #7e22ce;
-		--orange-bg: #fff7ed;
-		--orange-fg: #c2410c;
-		--red-bg: #fef2f2;
-		--red-fg: #b91c1c;
+		--surf: #fdfbf7;
+		--ink: #14110f;
+		--mut: #443f3a;
+		--sub: #6f6960;
+		--line: #ddd6cb;
+		--acc: #a8380a;
 	}
 
 	body {
 		font-size: 11pt;
 	}
 
+	.meta {
+		border-bottom: 1px solid var(--line);
+		background-color: transparent;
+	}
+
+	.meta-inner,
 	.page {
 		max-width: none;
-		padding: 0;
-		gap: 22px;
+		padding-left: 0;
+		padding-right: 0;
 	}
 
-	.theme-toggle,
+	.page {
+		padding-top: 22px;
+		padding-bottom: 0;
+		gap: 24px;
+	}
+
+	/* A clock frozen mid-second has no business on paper; the footer already
+	   carries the availability line. */
+	.meta-time,
+	.toggle,
 	.tooltip,
-	.status,
-	.arrow {
+	.status {
 		display: none !important;
-	}
-
-	/* The live clock is meaningless on paper — print the availability line. */
-	.live {
-		display: none !important;
-	}
-
-	.static {
-		display: block !important;
 	}
 
 	.row {
 		margin: 0;
-		padding: 8px 0;
+		padding: 9px 0;
 		break-inside: avoid;
 	}
 
 	.row:hover {
 		background-color: transparent;
+		padding-left: 0;
+	}
+
+	.bar {
+		display: none;
 	}
 
 	.detail {
@@ -659,15 +669,11 @@ html:not(.no-js) .static {
 
 	.detail > span > span {
 		opacity: 1;
+		padding-top: 6px;
 		font-size: 10pt;
 	}
 
-	.identity {
-		break-inside: avoid;
-	}
-
 	.label {
-		padding: 0;
 		break-after: avoid;
 	}
 
@@ -676,10 +682,11 @@ html:not(.no-js) .static {
 		font-size: 10pt;
 	}
 
-	/* Keep the tinted pills in the PDF rather than letting the printer drop them. */
-	.badge,
+	/* Keep the tinted pills and chips in the PDF rather than letting the printer
+	   drop their backgrounds. */
 	.pill,
-	.tag {
+	.chip,
+	.status {
 		-webkit-print-color-adjust: exact;
 		print-color-adjust: exact;
 	}
