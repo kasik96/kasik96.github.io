@@ -64,4 +64,10 @@ constant at the top of `scripts/make-favicons.swift` to swap it.
 ## Deploying
 
 Pushing to `master` runs `.github/workflows/deploy.yml`, which builds `dist/`
-and publishes it to the `gh-pages` branch. `CNAME` points at kasemartin.cz.
+and rsyncs it over SSH to the Rosti app at `/srv/app/public`
+(kasemartin-9353.rostiapp.cz). On the server, nginx serves that directory
+directly (`/srv/conf/nginx.d/app.conf`); the stock Node process is disabled.
+
+The workflow needs two repository secrets: `ROSTI_SSH_KEY` (private key whose
+public half is in `/srv/.ssh/authorized_keys`) and `ROSTI_KNOWN_HOSTS`
+(`ssh-keyscan -p 13452 ssh.rosti.cz`).

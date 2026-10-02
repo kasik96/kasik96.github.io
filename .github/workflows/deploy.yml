@@ -1,16 +1,17 @@
-name: Deploy to GitHub Pages
+name: Deploy to Rosti
 
 on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build-and-deploy:
-    concurrency: ci-${{ github.ref }}
+    concurrency: deploy-rosti
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -22,8 +23,15 @@ jobs:
       - name: Build 🔧
         run: npm run build
 
+      # nginx on the Rosti app serves /srv/app/public directly (see README).
+      - name: Set up SSH 🔑
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.ROSTI_SSH_KEY }}" > ~/.ssh/id_ed25519
+          echo "${{ secrets.ROSTI_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519 ~/.ssh/known_hosts
+
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: dist
-          branch: gh-pages
+        run: |
+          rsync -az --delete -e "ssh -p 13452" dist/ app@ssh.rosti.cz:/srv/app/public/
+          ssh -p 13452 app@ssh.rosti.cz 'supervisorctl signal HUP nginx'
