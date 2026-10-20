@@ -17,9 +17,20 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v4
 
-      # No bundler and no dependencies — "build" just assembles dist/ from the
-      # static files. The résumé PDF is generated locally with `npm run pdf`
-      # and committed, so CI needs no browser.
+      # Node 24 runs src/build.ts directly (native type stripping). TypeScript
+      # itself is only needed for the typecheck.
+      - name: Set up Node 🟢
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install 📦
+        run: npm ci
+
+      - name: Typecheck 🔍
+        run: npm run typecheck
+
       - name: Build 🔧
         run: npm run build
 

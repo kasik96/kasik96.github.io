@@ -1,73 +1,108 @@
 # kasemartin.cz
 
-Personal site and résumé of Martin Kaše. Static HTML and CSS with no framework,
-no bundler and no dependencies.
+Personal site of Martin Kaše. One typed data file, rendered at build time into a
+human page and a set of machine-readable endpoints, so they can never drift apart.
 
 ```
-index.html    all the content — every word is in the markup
-styles.css    tokens, layout, and the print stylesheet the résumé PDF comes from
-main.js       progressive enhancement only; the page works fully without it
-assets/       avatar, favicons, résumé PDF
-scripts/      favicon generation
+src/data/profile.ts    all content: person, facts, work, projects, stack, education
+src/render/html.ts     the page (human view + pre-rendered machine view)
+src/render/markdown.ts llms.txt, llms-full.txt, cv.md
+src/render/jsonld.ts   schema.org ProfilePage / Person / projects graph
+src/build.ts           writes dist/, plus robots.txt and sitemap.xml
+src/styles.css         inlined into <head> at build time
+src/enhance.js         progressive enhancement only
+scripts/serve.ts       local preview with production content types
+assets/                avatar, self-hosted Geist fonts, favicons
 ```
 
 ## Running it
 
+Needs Node 24+ (it runs the TypeScript directly; nothing to compile).
+
 ```sh
-npm run dev     # serves on http://localhost:3000
-npm run build   # assembles dist/ (what CI deploys)
+npm install         # only TypeScript + @types/node, for the typecheck
+npm run build       # → dist/
+npm run preview     # serves dist/ on http://localhost:3000
+npm run dev         # both
+npm run typecheck
 ```
 
-There is nothing to install. `npm run build` is a file copy.
+To change anything on the site, edit `src/data/profile.ts` and rebuild.
+
+## What gets generated
+
+| Path              | Content type                         |                                   |
+| ----------------- | ------------------------------------ | --------------------------------- |
+| `/`               | `text/html`                          | the page, JSON-LD inlined         |
+| `/llms.txt`       | `text/markdown; charset=utf-8`       | llmstxt.org format, concise       |
+| `/llms-full.txt`  | `text/markdown; charset=utf-8`       | everything, full descriptions     |
+| `/profile.jsonld` | `application/ld+json`                | same graph as the inline JSON-LD  |
+| `/cv.md`          | `text/markdown; charset=utf-8`       | markdown CV                       |
+| `/sitemap.xml`    | `application/xml`                    |                                   |
+| `/robots.txt`     | `text/plain`                         | allows all, AI crawlers by name   |
 
 ## What needs JavaScript
 
-Nothing, for reading the page. `main.js` only adds:
+Nothing, for reading. `enhance.js` only:
 
-- the ticking clock in the header (without it, a static availability line shows)
-- the online/offline badge (hidden without it)
-- the light/dark toggle (without it, the theme follows `prefers-color-scheme`)
-- copy-to-clipboard on the email pill (without it, it stays a `mailto:` link)
+- swaps the human / machine view in place and mirrors it in `?view=machine`
+  (without JS, "machine" is a plain link to `/llms.txt`)
+- dims the presence dots outside 08:00–16:00 Europe/Prague
 
-Hover-to-expand on the list rows, the badges, and both themes are pure CSS.
-Touch devices, which have no hover, get the expanded detail by default.
+## Hosting (Rosti nginx)
 
-## The résumé PDF
+Pushing to `master` runs `.github/workflows/deploy.yml`: typecheck, build, then
+rsync `dist/` over SSH to `/srv/app/public` on the Rosti app. nginx serves that
+directory directly (`/srv/conf/nginx.d/app.conf`).
 
-There is no PDF in the repo right now, and nothing on the page links to one. The
-print stylesheet in `styles.css` is finished and waiting, so producing one is:
+The `server` block in `app.conf` needs these additions for the endpoints to be
+served with the right types, compressed and cached:
 
-1. `npm run dev`, then open <http://localhost:3000>
-2. `Cmd-P` → Destination **Save as PDF**
-3. Margins **Default**, **Background graphics ON** (this keeps the coloured pills)
-4. Save as `assets/martin-kase-resume.pdf`
+```nginx
+# Machine-readable endpoints
+location ~ ^/llms(-full)?\.txt$ {
+    default_type text/markdown;
+    types { }
+    charset utf-8;
+    add_header Cache-Control "public, max-age=3600";
+}
+location = /cv.md {
+    default_type text/markdown;
+    types { }
+    charset utf-8;
+    add_header Cache-Control "public, max-age=3600";
+}
+location = /profile.jsonld {
+    default_type application/ld+json;
+    types { }
+    charset utf-8;
+    add_header Cache-Control "public, max-age=3600";
+}
 
-Then add the pill back to the contact row in `index.html`:
+# Fonts never change in place; images might, so a week
+location /assets/fonts/ {
+    add_header Cache-Control "public, max-age=31536000, immutable";
+}
+location /assets/ {
+    add_header Cache-Control "public, max-age=604800";
+}
 
-```html
-<a class="pill" href="/assets/martin-kase-resume.pdf" download>
-  <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><path d="m7 10 5 5 5-5" /><path d="M12 15V3" /></svg>
-  Résumé
-</a>
+gzip on;
+gzip_types text/css text/javascript application/javascript text/markdown
+           application/ld+json application/xml text/plain image/svg+xml;
+charset utf-8;
+charset_types text/html text/plain text/css text/markdown application/ld+json application/xml;
 ```
 
-The `@media print` block handles the rest: it forces the light palette, drops the
-toggle and status badge, expands every hover detail, and prints the static
-availability line instead of a clock frozen mid-second.
+Then `supervisorctl signal HUP nginx`. Check with
+`curl -sI https://kasemartin.cz/llms.txt | grep -i content-type`.
+
+The workflow needs two repository secrets: `ROSTI_SSH_KEY` (private key whose
+public half is in `/srv/.ssh/authorized_keys`) and `ROSTI_KNOWN_HOSTS`
+(`ssh-keyscan -p 13452 ssh.rosti.cz`).
 
 ## Favicons
 
 `npm run icons` re-renders every icon size from the 👨🏻‍💻 emoji using the system
 emoji font, then wraps the 32px one in an `.ico` container. Change the `emoji`
 constant at the top of `scripts/make-favicons.swift` to swap it.
-
-## Deploying
-
-Pushing to `master` runs `.github/workflows/deploy.yml`, which builds `dist/`
-and rsyncs it over SSH to the Rosti app at `/srv/app/public`
-(kasemartin-9353.rostiapp.cz). On the server, nginx serves that directory
-directly (`/srv/conf/nginx.d/app.conf`); the stock Node process is disabled.
-
-The workflow needs two repository secrets: `ROSTI_SSH_KEY` (private key whose
-public half is in `/srv/.ssh/authorized_keys`) and `ROSTI_KNOWN_HOSTS`
-(`ssh-keyscan -p 13452 ssh.rosti.cz`).

@@ -1,11 +1,21 @@
 {
   "name": "kasemartin.cz",
   "private": true,
-  "version": "1.0.0",
-  "description": "Personal website and resume of Martin Kaše. Static HTML and CSS, no framework.",
+  "version": "2.0.0",
+  "description": "Personal website of Martin Kaše. One typed data file, rendered at build time to HTML, llms.txt, JSON-LD and markdown.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "build": "rm -rf dist && mkdir -p dist && cp index.html styles.css main.js CNAME dist/ && cp -R assets dist/assets",
-    "dev": "python3 -m http.server 3000",
+    "build": "node src/build.ts",
+    "preview": "node scripts/serve.ts",
+    "dev": "npm run build && npm run preview",
+    "typecheck": "tsc",
     "icons": "swift scripts/make-favicons.swift assets && python3 scripts/make-ico.py"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "^5.9.3"
   }
 }
